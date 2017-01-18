@@ -7,9 +7,13 @@
   <h4>URLs and their shortened forms</h4>
 
   <ul>
-      <li><a href='<%= `${longURL}` %>'>Long URL</li>
-      <li><a href='<%= `/urls/${shortURL}`%>'>Short URL</a></li>
+    <li>Short URL: <%= shortURL %></li>
   </ul>
+
+  <form action="/urls/<%= shortURL %>" method="POST">
+    <input type="text" id="longURL" name="longURL" value="<%= longURL %>" style="width: 200px; height: 20px; vertical-align: middle">
+    <button>update</button>
+  </form>
 
 </body>
 </html>

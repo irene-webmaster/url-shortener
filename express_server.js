@@ -30,8 +30,6 @@ app.get("/urls/:id", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
-
-
 app.post("/urls", (req, res) => {
   console.log(req.body);  // debug statement to see POST parameters
   res.send("Ok");         // Respond with 'Ok' (we will replace this)
@@ -40,3 +38,16 @@ app.post("/urls", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
+
+function generateRandomString() {
+  var letNum = ['1','2','3','4','5','6','7','8','9','a','b','c','d','e','f','g','e','f','j','k','l','m','n','o','p'];
+  var fakeShortUrl = ''
+
+  for(var i = 0; i < letNum.length; i+=5){
+    if(fakeShortUrl.length <= 5) {
+      var fakeNum = Math.floor(Math.random()*letNum.length);
+      fakeShortUrl += letNum[fakeNum];
+    }
+  }
+  return fakeShortUrl;
+}

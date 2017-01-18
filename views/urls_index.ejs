@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>TinyApp</title>
+</head>
+
+<body>
+  <h4>URLs and their shortened forms</h4>
+
+  <ul>
+    <% for(var url in urls) { %>
+        <li><%= `${url} : ${urls[url]}` %></li>
+      <% } %>
+  </ul>
+
+  <a href="#">Shorten URL</a>
+
+</body>
+</html>

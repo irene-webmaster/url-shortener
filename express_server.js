@@ -9,9 +9,13 @@ app.use(express.static('public'));
 app.use(cookieParser());
 app.set("view engine", "ejs");
 
-var urlDatabase = {
+let urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
+};
+
+let users = {
+  "123abc": {id: "123abc", email: "user@email.com", password: "123456"}
 };
 
 app.get("/", (req, res) => {
@@ -73,14 +77,48 @@ app.post("/login", (req, res) => {
 
 app.post("/logout", (req, res) => {
   res.clearCookie('username');
-  // console.log(req.body.username);
   res.redirect('/');
 });
+
+app.get("/register", (req, res) => {
+  let templateVars = {
+    shortURL: req.params.id,
+    longURL: urlDatabase[req.params.id],
+    username: req.cookies["username"]
+  };
+  res.render("registration", templateVars);
+});
+
+app.post("/register", (req, res) => {
+  let userId = generateRandomString();
+  let email = req.body.email;
+  let password = req.body.password;
+
+  res.cookie('user_id', userId);
+
+  let result = registerExistingUser(email, password);
+  // console.log(result);
+  if(result) {
+    res.redirect(400);
+  } else {
+    users[userId] = {"id": userId, "email": req.body.email, "password": req.body.password};
+  }
+  // console.log(users);
+  res.redirect("/");
+});
+
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
 
+function registerExistingUser(email, password) {
+  for (let user in users) {
+    if(users[user].email === email || users[user].email === "" || users[user].password === "") {
+      return true;
+    }
+  }
+}
 
 function generateRandomString() {
   var letNum = ['1','2','3','4','5','6','7','8','9','a','b','c','d','e','f','g','e','f','j','k','l','m','n','o','p'];

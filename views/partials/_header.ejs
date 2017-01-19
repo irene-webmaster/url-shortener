@@ -12,8 +12,10 @@
     <button>logout</button>
   </form>
 <% } else { %>
+<span>Login:</span>
 <form method="POST" action="/login">
   <input type="text" name="username">
   <button>login</button>
 </form>
+or <a href="/register">register</a>
 <% } %>

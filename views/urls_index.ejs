@@ -3,19 +3,18 @@
 
 <% include partials/_header %>
 
-<body>
-  <h4>URLs and their shortened forms</h4>
-  <ul>
-    <% for(var url in urls) { %>
-        <li>
-          <%= url %>: <a href="<%= urls[url] %>"><%= urls[url] %></a>
-          <a href="/urls/<%= url %>">edit</a>
-          <form method="POST" action="/urls/<%= url %>/delete" style="display: inline">
-            <button>delete</button>
-          </form>
-        </li>
-      <% } %>
-  </ul>
-  <a href="/urls/new">Shorten URL</a>
+<h4>URLs and their shortened forms</h4>
+<ul>
+  <% for(var url in urls) { %>
+    <li>
+      <%= url %>: <a href="<%= urls[url] %>"><%= urls[url] %></a>
+      <a href="/urls/<%= url %>">edit</a>
+      <form method="POST" action="/urls/<%= url %>/delete" style="display: inline">
+        <button>delete</button>
+      </form>
+    </li>
+  <% } %>
+</ul>
+<a href="/urls/new">Shorten URL</a>
 </body>
 </html>

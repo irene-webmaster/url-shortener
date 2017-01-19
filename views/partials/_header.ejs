@@ -1,6 +1,19 @@
 <!-- views/partials/_header.ejs -->
 <head>
   <title>TinyApp</title>
-  <link rel="stylesheet" href="css/style.css" type="text/css" />
+  <link rel="stylesheet" href="/css/style.css" type="text/css" />
   <link href="https://fonts.googleapis.com/css?family=Gentium+Basic" rel="stylesheet">
 </head>
+
+<body>
+<% if(username) { %>
+  Hello, <%= username %>
+  <form method="POST" action="/logout">
+    <button>logout</button>
+  </form>
+<% } else { %>
+<form method="POST" action="/login">
+  <input type="text" name="username">
+  <button>login</button>
+</form>
+<% } %>

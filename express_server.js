@@ -9,6 +9,11 @@ app.use(express.static('public'));
 app.use(cookieParser());
 app.set("view engine", "ejs");
 
+app.use(function(req, res, next){
+  res.locals.user = users[req.cookies["user_id"]];
+  next();
+});
+
 let urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
@@ -19,19 +24,16 @@ let users = {
 };
 
 app.get("/", (req, res) => {
-  // res.redirect("/urls/new");
-  // res.end("");
   res.redirect("/urls/new");
 });
 
 app.get("/urls/new", (req, res) => {
-  let templateVars = {username: req.cookies["username"]}
-  res.render("urls_new", templateVars);
+  res.render("urls_new");
 });
 
 app.get("/urls", (req, res) => {
   let templateVars = {
-    username: req.cookies["username"],
+    // username: req.cookies["username"],
     urls: urlDatabase
   };
   res.render("urls_index", templateVars);
@@ -40,8 +42,8 @@ app.get("/urls", (req, res) => {
 app.get("/urls/:id", (req, res) => {
   let templateVars = {
     shortURL: req.params.id,
-    longURL: urlDatabase[req.params.id],
-    username: req.cookies["username"]
+    longURL: urlDatabase[req.params.id]
+    // username: req.cookies["username"]
   };
   res.render("urls_show", templateVars);
 });
@@ -76,15 +78,15 @@ app.post("/login", (req, res) => {
 });
 
 app.post("/logout", (req, res) => {
-  res.clearCookie('username');
+  res.clearCookie('user_id');
   res.redirect('/');
 });
 
 app.get("/register", (req, res) => {
   let templateVars = {
     shortURL: req.params.id,
-    longURL: urlDatabase[req.params.id],
-    username: req.cookies["username"]
+    longURL: urlDatabase[req.params.id]
+    // username: req.cookies["username"]
   };
   res.render("registration", templateVars);
 });
@@ -114,7 +116,7 @@ app.listen(PORT, () => {
 
 function registerExistingUser(email, password) {
   for (let user in users) {
-    if(users[user].email === email || users[user].email === "" || users[user].password === "") {
+    if(users[user].email === email) {
       return true;
     }
   }

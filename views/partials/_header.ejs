@@ -6,8 +6,8 @@
 </head>
 
 <body>
-<% if(username) { %>
-  Hello, <%= username %>
+<% if(user) { %>
+  Hello, <%= user.email %>
   <form method="POST" action="/logout">
     <button>logout</button>
   </form>

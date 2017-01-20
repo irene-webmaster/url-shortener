@@ -71,9 +71,29 @@ app.post("/urls/:shortURL", (req, res) => {
   res.redirect('/urls');
 });
 
+app.get("/login", (req, res) => {
+  res.render("login");
+});
+
 app.post("/login", (req, res) => {
-  res.cookie('username', req.body.username);
-  // console.log(req.body.username);
+  let email = req.body.email;
+  let password = req.body.password;
+
+  let emailRes = findUserEmail(email);
+  let passRes = findUserPass(password);
+
+  if(!emailRes) {
+    res.redirect(403);
+  }
+
+  if(!passRes) {
+    res.redirect(403);
+  }
+
+  if(emailRes && passRes) {
+    res.cookie('user_id', emailRes);
+  }
+
   res.redirect('/');
 });
 
@@ -98,14 +118,14 @@ app.post("/register", (req, res) => {
 
   res.cookie('user_id', userId);
 
-  let result = registerExistingUser(email, password);
+  let result = findUserEmail(email);
   // console.log(result);
   if(result) {
     res.redirect(400);
   } else {
     users[userId] = {"id": userId, "email": req.body.email, "password": req.body.password};
   }
-  // console.log(users);
+  console.log(users);
   res.redirect("/");
 });
 
@@ -114,10 +134,18 @@ app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
 
-function registerExistingUser(email, password) {
+function findUserEmail(email) {
   for (let user in users) {
     if(users[user].email === email) {
-      return true;
+      return users[user].id;
+    }
+  }
+}
+
+function findUserPass(password) {
+  for (let user in users) {
+    if(users[user].password === password) {
+      return users[user].id;
     }
   }
 }

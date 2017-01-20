@@ -14,20 +14,36 @@ app.use(function(req, res, next){
   next();
 });
 
-let urlDatabase = {
+const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
 
-let users = {
+// const urlDatabase = {
+//   "userid": [
+//     {"b2xVn2": "http://www.lighthouselabs.ca"},
+//     {"9sm5xK": "http://www.google.com"}
+//   ],
+//   "userid2": [
+//     {"b2xVn2": "http://www.lighthouselabs.ca"},
+//     {"9sm5xK": "http://www.google.com"}
+//   ]
+// };
+
+const users = {
   "123abc": {id: "123abc", email: "user@email.com", password: "123456"}
 };
 
 app.get("/", (req, res) => {
-  res.redirect("/urls/new");
+  res.render("index");
 });
 
 app.get("/urls/new", (req, res) => {
+  console.log(res.locals.user);
+  if(res.locals.user === undefined) {
+    res.redirect("/");
+    return;
+  }
   res.render("urls_new");
 });
 
@@ -51,7 +67,7 @@ app.get("/urls/:id", (req, res) => {
 app.post("/urls/create", (req, res) => {
   let fakeUrl = generateRandomString();
   urlDatabase[fakeUrl] = req.body['longURL'];
-  res.redirect('/urls/' + fakeUrl);
+  res.redirect("/urls/" + fakeUrl);
 });
 
 app.get("/u/:shortURL", (req, res) => {
@@ -61,14 +77,14 @@ app.get("/u/:shortURL", (req, res) => {
 
 app.post("/urls/:id/delete", (req, res) => {
   delete urlDatabase[req.params.id];
-  res.redirect('/urls');
+  res.redirect("/urls");
 });
 
 app.post("/urls/:shortURL", (req, res) => {
   let shortURL = req.params.shortURL;
   let longURL  = req.body.longURL;
   urlDatabase[shortURL] = longURL;
-  res.redirect('/urls');
+  res.redirect("/urls");
 });
 
 app.get("/login", (req, res) => {
@@ -79,27 +95,26 @@ app.post("/login", (req, res) => {
   let email = req.body.email;
   let password = req.body.password;
 
+  if(!email || !password) {
+    res.redirect("/login");
+    return
+  }
+
   let emailRes = findUserEmail(email);
   let passRes = findUserPass(password);
 
-  if(!emailRes) {
+  if(!emailRes || !passRes) {
     res.redirect(403);
-  }
-
-  if(!passRes) {
-    res.redirect(403);
-  }
-
-  if(emailRes && passRes) {
-    res.cookie('user_id', emailRes);
+  } else {
+    res.cookie("user_id", emailRes);
   }
 
   res.redirect('/');
 });
 
 app.post("/logout", (req, res) => {
-  res.clearCookie('user_id');
-  res.redirect('/');
+  res.clearCookie("user_id");
+  res.redirect("/");
 });
 
 app.get("/register", (req, res) => {
@@ -116,7 +131,12 @@ app.post("/register", (req, res) => {
   let email = req.body.email;
   let password = req.body.password;
 
-  res.cookie('user_id', userId);
+  if(!email || !password) {
+    res.redirect("/register");
+    return
+  }
+
+  res.cookie("user_id", userId);
 
   let result = findUserEmail(email);
   // console.log(result);
@@ -135,16 +155,16 @@ app.listen(PORT, () => {
 });
 
 function findUserEmail(email) {
-  for (let user in users) {
-    if(users[user].email === email) {
-      return users[user].id;
-    }
-  }
+  return findUserField("email", email)
 }
 
 function findUserPass(password) {
+  return findUserField("password", password)
+}
+
+function findUserField(field, value) {
   for (let user in users) {
-    if(users[user].password === password) {
+    if(users[user][field] === value) {
       return users[user].id;
     }
   }

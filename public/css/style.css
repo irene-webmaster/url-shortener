@@ -51,30 +51,70 @@ table {
 
 /* Main styles */
 body {
+  background-color: #fff;
+  background-image: url(../images/fon.png);
+  background-position: 0 0;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100%;
   font-family: 'Gentium Basic', serif;
-  font-size: 14px;
+  font-size: 16px;
   color: #333;
-  padding: 50px;
+}
+
+header {
+  background-color: #555;
+  height: 26px;
+  padding: 20px 60px;
+  opacity: 0.8;
+  color: #fff;
+  text-align: right;
+}
+
+header a {
+  color: #fff;
+  font-size: 18px;
+}
+
+header a:hover {
+  color: #fff;
+  font-size: 18px;
+  text-decoration: none;
 }
 
 h1 {
-  font-size: 42px;
+  font-size: 50px;
   text-align: center;
-  margin-bottom: 50px;
+  margin: 100px 0 50px;
 }
 
-form .input {
+h2 {
+  text-align: center;
+  font-size: 40px;
+  margin: 30px 0;
+}
+
+a {
+  color: #333;
+}
+
+form input {
   border: solid 1px #999;
   vertical-align: middle;
   font-family: 'Gentium Basic', serif;
   font-size: 20px;
+  padding: 5px 10px;
 }
 
-form .btn {
+form button {
   vertical-align: middle;
   background-color: #fff;
   border: solid 1px #999;
   font-family: 'Gentium Basic', serif;
+}
+
+.wrapper {
+  min-height: 100%;
 }
 
 .short-form {
@@ -95,14 +135,40 @@ form .btn {
 }
 
 .short-form-btn {
-
-  width: 95px;
+  width: 100px;
   height: 36px;
   font-size: 20px;
   text-transform: uppercase;
 }
 
+.reg-form {
+  text-align: center;
+}
 
+.reg-form input {
+  display: block;
+  width: 300px;
+  height: 30px;
+  margin: 17px auto;
+}
+
+.reg-form button {
+  background-color: #b1aeae;
+  width: 322px;
+  height: 40px;
+  font-size: 23px;
+  text-transform: uppercase;
+  color: #333;
+}
+
+.log-form {
+  display: inline;
+  margin-left: 20px;
+}
+
+.log-form button {
+  font-size: 16px;
+}
 
 
 

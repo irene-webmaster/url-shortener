@@ -5,11 +5,11 @@
 
 <h4>URLs and their shortened forms</h4>
 <ul>
-  <% for(var url in urls) { %>
+  <% for(var data of urls) { %>
     <li>
-      <%= url %>: <a href="<%= urls[url] %>"><%= urls[url] %></a>
-      <a href="/urls/<%= url %>">edit</a>
-      <form method="POST" action="/urls/<%= url %>/delete" style="display: inline">
+      <%= data.surl %>: <a href="<%= data.lurl %>"><%= data.lurl %></a>
+      <a href="/urls/<%= data.surl %>">edit</a>
+      <form method="POST" action="/urls/<%= data.surl %>/delete" style="display: inline">
         <button>delete</button>
       </form>
     </li>

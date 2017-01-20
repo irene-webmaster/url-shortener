@@ -6,11 +6,13 @@
 </head>
 
 <body>
-<% if(user) { %>
-  Hello, <%= user.email %>
-  <form method="POST" action="/logout">
-    <button>logout</button>
-  </form>
+<header>
+  <% if(user) { %>
+    Hello, <%= user.email %>
+    <form method="POST" action="/logout" class="log-form">
+      <button>logout</button>
+    </form>
 <% } else { %>
 <a href="/login">Login</a> / <a href="/register">Register</a>
 <% } %>
+</header>

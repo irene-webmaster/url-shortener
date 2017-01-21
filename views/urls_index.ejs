@@ -3,18 +3,32 @@
 
 <% include partials/_header %>
 
-<h4>URLs and their shortened forms</h4>
-<ul>
-  <% for(var data of urls) { %>
-    <li>
-      <%= data.surl %>: <a href="<%= data.lurl %>"><%= data.lurl %></a>
-      <a href="/urls/<%= data.surl %>">edit</a>
-      <form method="POST" action="/urls/<%= data.surl %>/delete" style="display: inline">
-        <button>delete</button>
-      </form>
-    </li>
-  <% } %>
-</ul>
-<a href="/urls/new">Shorten URL</a>
+<div class="wrapper">
+  <h2>Your short URLs</h2>
+  <table class="all-links">
+    <tbody>
+      <% for(var data of urls) { %>
+      <tr>
+        <td>
+        <a href="u/<%= data.surl %>">http://localhost:8080/u/<%= data.surl %></a>
+      </td>
+      <td>
+        <%= data.lurl %>
+      </td>
+      <td>
+        <a href="/urls/<%= data.surl %>">edit</a>
+      </td>
+      <td>
+        <form method="POST" action="/urls/<%= data.surl %>/delete" class="log-form">
+          <button>delete</button>
+        </form>
+      </td>
+      </tr>
+    <% } %>
+    </tbody>
+  </table>
+  <a href="/urls/new">Add new URL</a>
+</div>
+
 </body>
 </html>

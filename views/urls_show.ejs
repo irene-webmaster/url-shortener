@@ -3,16 +3,26 @@
 
 <% include partials/_header %>
 
-  <h4>URLs and their shortened forms</h4>
+<div class="wrapper">
+  <h2>Congratulations!</h2>
 
-  <ul>
-    <li>Short URL: <%= shortURL %></li>
-  </ul>
+  <div class="info">
+    Short URL: http://localhost:8080/u/<%= shortURL %>
+  </div>
 
-  <form action="/urls/<%= shortURL %>" method="POST">
-    <input type="text" id="longURL" name="longURL" value="<%= longURL %>" style="width: 200px; height: 20px; vertical-align: middle">
+  <form action="/urls/<%= shortURL %>" method="POST" class="update-form">
+    <input type="text" id="longURL" name="longURL" value="<%= longURL %>">
     <button>update</button>
   </form>
 
+  <div class="info">
+    <a href="/urls">All links</a>
+  </div>
+
+  <div class="info">
+    <a href="/urls/new">Add a new URL</a>
+  </div>
+
+</div>
 </body>
 </html>

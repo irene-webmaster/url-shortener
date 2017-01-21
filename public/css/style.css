@@ -1,17 +1,9 @@
 /* Reset */
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed,
-figure, figcaption, footer, header, hgroup,
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
+a, img, small, strong,b, u, i, dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend, table, caption, tbody, tfoot,
+thead, tr, th, td, footer, header, menu, nav {
   margin: 0;
   padding: 0;
   border: 0;
@@ -20,42 +12,14 @@ time, mark, audio, video {
   vertical-align: baseline;
 }
 
-/* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure,
-footer, header, hgroup, menu, nav, section {
-  display: block;
-}
-
-body {
-  line-height: 1;
-}
-
-ol, ul {
-  list-style: none;
-}
-
-blockquote, q {
-  quotes: none;
-}
-
-blockquote:before, blockquote:after,
-q:before, q:after {
-  content: '';
-  content: none;
-}
-
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
-}
 
 /* Main styles */
 body {
   background-color: #fff;
-  background-image: url(../images/fon.png);
-  background-position: 0 0;
-  background-repeat: no-repeat;
-  background-size: cover;
+  /*background-image: url(../images/fon.png);*/
+  /*background-position: 0 0;*/
+  /*background-repeat: no-repeat;*/
+  /*background-size: cover;*/
   height: 100%;
   font-family: 'Gentium Basic', serif;
   font-size: 16px;
@@ -99,6 +63,7 @@ a {
 }
 
 form input {
+  display: inline-block;
   border: solid 1px #999;
   vertical-align: middle;
   font-family: 'Gentium Basic', serif;
@@ -107,6 +72,7 @@ form input {
 }
 
 form button {
+  display: inline-block;
   vertical-align: middle;
   background-color: #fff;
   border: solid 1px #999;
@@ -115,30 +81,29 @@ form button {
 
 .wrapper {
   min-height: 100%;
+  padding: 50px;
 }
 
 .short-form {
   text-align: center;
 }
 
-.short-form-label {
-  font-size: 24px;
-  vertical-align: middle;
-  margin-right: 15px;
-}
-
 .short-form-input {
-  width: 340px;
-  height: 24px;
+  width: 460px;
+  height: 35px;
   padding: 5px;
-  margin-right: 7px;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
 }
 
 .short-form-btn {
   width: 100px;
-  height: 36px;
+  height: 47px;
+  margin-left: -1px;
   font-size: 20px;
   text-transform: uppercase;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
 }
 
 .reg-form {
@@ -147,18 +112,20 @@ form button {
 
 .reg-form input {
   display: block;
-  width: 300px;
+  width: 500px;
   height: 30px;
   margin: 17px auto;
+  border-radius: 3px;
 }
 
 .reg-form button {
   background-color: #b1aeae;
-  width: 322px;
+  width: 522px;
   height: 40px;
   font-size: 23px;
   text-transform: uppercase;
   color: #333;
+  border-radius: 3px;
 }
 
 .log-form {
@@ -170,15 +137,50 @@ form button {
   font-size: 16px;
 }
 
+.all-links {
+  margin-bottom: 20px;
+  text-align: center;
+}
 
+.all-links td {
+  padding: 5px;
+  text-align: left;
+}
 
+.info {
+  margin: 0 0 20px;
+  font-size: 20px;
+}
 
+.info a {
+  /*text-decoration: none;*/
+}
 
+.update-form {
+  margin-bottom: 50px;
+}
 
+.update-form input{
+  width: 300px;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
 
+.update-form button {
+  width: 58px;
+  height: 35px;
+  margin-left: -6px;
+  background-color: #777;
+  font-size: 16px;
+  color: #fff;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
 
-
-
+.links {
+  text-align: center;
+  font-size: 25px;
+}
 
 
 

@@ -5,6 +5,9 @@
 
 <div class="wrapper">
   <h2>Your short URLs</h2>
+    <% if (!urls || urls.length === 0) { %>
+      <div class="info">You don't have Short URLs.</div>
+    <% } else { %>
     <table class="all-links">
       <tbody>
         <% for(var data of urls) { %>
@@ -27,7 +30,7 @@
       <% } %>
       </tbody>
     </table>
-
+  <% } %>
   <a href="/urls/new">Create a New Short Link</a>
 </div>
 

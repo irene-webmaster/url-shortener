@@ -45,9 +45,8 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  let arrUrls = urlDatabase[req.cookies["user_id"]];
-  // console.log('something ', urlDatabase[req.cookies["user_id"]])
-  let templateVars = {
+  const arrUrls = urlDatabase[req.cookies["user_id"]];
+  const templateVars = {
     urls: arrUrls
   };
   res.render("urls_index", templateVars);
@@ -55,27 +54,26 @@ app.get("/urls", (req, res) => {
 
 app.get("/urls/:id", (req, res) => {
   for (el in urlDatabase) {
-    console.log('anything', el);
     for (let i = 0; i < urlDatabase[el].length; i++) {
       if (urlDatabase[el][i] && req.params.id === urlDatabase[el][i].surl) {
-        console.log('urlDatabase ', urlDatabase);
-        console.log('urlDatabase[el][i] ', urlDatabase[el][i]);
-        console.log('req.params.id ', req.params.id);
-        console.log('urlDatabase[el][i].surl ', urlDatabase[el][i].surl);
         let arrUrls = urlDatabase[req.cookies["user_id"]];
         let shortURL = req.params.id;
+        let userLink = arrUrls.find((entry) => entry.surl == shortURL);
 
-        let templateVars = {
-          shortURL: shortURL,
-          longURL: arrUrls.find((entry) => entry.surl == shortURL).lurl
-        };
-        res.render("urls_show", templateVars);
-        return;
+        if(userLink) {
+          const templateVars = {
+            shortURL: shortURL,
+            longURL: userLink.lurl
+          };
+          res.render("urls_show", templateVars);
+          return;
+        } else {
+          res.status(403).render("error", {errMessage: "You do not have access to this page."});
+        }
       }
     }
   }
-  res.status(404).send("404 Page not found");
-
+  res.status(404).render("error", {errMessage: "Page Not Found"});
 });
 
 app.post("/urls/create", (req, res) => {
@@ -95,7 +93,7 @@ app.get("/u/:shortURL", (req, res) => {
       }
     }
   }
-  res.status(404).send('This page does not exist');
+  res.status(404).render("error", {errMessage: "Page Not Found"});
   return;
 });
 
@@ -133,7 +131,7 @@ app.post("/login", (req, res) => {
     const password = req.body.password;
 
     if(!email || !password) {
-      res.redirect("/login");
+      res.status(401).render("error", {errMessage: "Incorrect email or password"});
       return
     }
 
@@ -144,6 +142,11 @@ app.post("/login", (req, res) => {
        if(email === users[id].email) {
         hashed_password = users[id].password;
        }
+    }
+
+    if(!hashed_password) {
+      res.status(401).render("error", {errMessage: "Incorrect email or password"});
+      return
     }
 
     const comparePass = bcrypt.compareSync(password, hashed_password);
@@ -167,10 +170,6 @@ app.get("/register", (req, res) => {
   if (res.locals.user) {
     res.redirect("/")
   } else {
-    // let templateVars = {
-    //   shortURL: req.params.id,
-    //   longURL: urlDatabase[req.params.id]
-    // };
     res.render("registration");
   }
 });
@@ -184,7 +183,7 @@ app.post("/register", (req, res) => {
     const password = req.body.password;
 
     if(!email || !password) {
-      res.redirect("/register");
+      res.status(400).render("error", {errMessage: "Incorrect email or password"});
       return
     }
     const hashed_password = bcrypt.hashSync(password, 10);
@@ -193,11 +192,10 @@ app.post("/register", (req, res) => {
 
     let result = findUserByEmail(email);
     if(result) {
-      res.redirect(400);
+      res.status(404).render("error", {errMessage: "Incorrect email or password"});
     } else {
       users[userId] = {"id": userId, "email": req.body.email, "password": hashed_password};
     }
-    console.log('bd ', users);
     urlDatabase[userId] = [];
     res.redirect("/");
   }
@@ -244,11 +242,17 @@ function generateRandomString() {
 function requireLogin(req, res, next) {
   const user = req.cookies["user_id"];
   console.log('users ', users);
+  console.log('user id ', user);
   for (el in users) {
     if (user === users[el].id) {
       next();
       return;
     }
   }
-  res.status(401).send('<h2>You do not have access to this page. Please <a href="/login">log in</a></h2>')
+  res.status(401).render("error", {errMessage: "You do not have access to this page. Please <a href=\"/login\">log in</a>"});
 }
+
+
+
+
+

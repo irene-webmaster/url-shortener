@@ -225,12 +225,12 @@ function findUserField(field, value) {
 }
 
 function generateRandomString() {
-  var letNum = ['1','2','3','4','5','6','7','8','9','a','b','c','d','e','f','g','e','f','j','k','l','m','n','o','p'];
-  var fakeShortUrl = '';
+  const letNum = ['1','2','3','4','5','6','7','8','9','a','b','c','d','e','f','g','e','f','j','k','l','m','n','o','p'];
+  let fakeShortUrl = '';
 
-  for(var i = 0; i < letNum.length; i+=5){
+  for(let i = 0; i < letNum.length; i+=5){
     if(fakeShortUrl.length <= 5) {
-      var fakeNum = Math.floor(Math.random()*letNum.length);
+      let fakeNum = Math.floor(Math.random()*letNum.length);
       fakeShortUrl += letNum[fakeNum];
     }
   }
@@ -239,8 +239,6 @@ function generateRandomString() {
 
 function requireLogin(req, res, next) {
   const user = getUserId(req);
-  console.log('users ', users);
-  console.log('user id ', user);
   for (el in users) {
     if (user === users[el].id) {
       next();
@@ -251,8 +249,5 @@ function requireLogin(req, res, next) {
 }
 
 function getUserId(req) {
-  // return req.cookies["user_id"];
   return req.session.user_id;
 }
-
-

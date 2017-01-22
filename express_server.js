@@ -33,7 +33,7 @@ const users = {
 };
 
 app.get("/", (req, res) => {
-  if (req.cookies["user_id"]) {
+  if (res.locals.user) {
     res.redirect("/urls")
   } else {
     res.redirect("/login");
@@ -56,7 +56,7 @@ app.get("/urls", (req, res) => {
 app.get("/urls/:id", (req, res) => {
   for (el in urlDatabase) {
     console.log('anything', el);
-    for (let i = 0; urlDatabase[el].length; i++) {
+    for (let i = 0; i < urlDatabase[el].length; i++) {
       if (urlDatabase[el][i] && req.params.id === urlDatabase[el][i].surl) {
         console.log('urlDatabase ', urlDatabase);
         console.log('urlDatabase[el][i] ', urlDatabase[el][i]);
@@ -87,12 +87,9 @@ app.post("/urls/create", (req, res) => {
 
 app.get("/u/:shortURL", (req, res) => {
   for (el in urlDatabase) {
-    for (let i = 0; urlDatabase[el].length; i++) {
-      if (req.params.shortURL !== urlDatabase[el][i].surl) {
-        let arrUrls = urlDatabase[req.cookies["user_id"]];
-        let shortURL = req.params.shortURL;
-
-        let longURL = arrUrls.find((entry) => entry.surl == shortURL).lurl;
+    for (let i = 0; i < urlDatabase[el].length; i++) {
+      if (urlDatabase[el] && urlDatabase[el][i] && req.params.shortURL === urlDatabase[el][i].surl) {
+        let longURL = urlDatabase[el][i].lurl
         res.redirect(longURL);
         return;
       }
@@ -121,7 +118,7 @@ app.post("/urls/:shortURL", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-  if (req.cookies["user_id"]) {
+  if (res.locals.user) {
     res.redirect("/");
   } else {
     res.render("login");
@@ -129,7 +126,7 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  if (req.cookies["user_id"]) {
+  if (res.locals.user) {
     res.redirect("/")
   } else {
     const email = req.body.email;
@@ -157,7 +154,7 @@ app.post("/login", (req, res) => {
       res.cookie("user_id", userId);
     }
 
-    res.redirect('/urls/new');
+    res.redirect('/');
   }
 });
 
@@ -167,7 +164,7 @@ app.post("/logout", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
-  if (req.cookies["user_id"]) {
+  if (res.locals.user) {
     res.redirect("/")
   } else {
     // let templateVars = {
@@ -179,7 +176,7 @@ app.get("/register", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
-  if (req.cookies["user_id"]) {
+  if (res.locals.user) {
     res.redirect("/")
   } else {
     let userId = generateRandomString();
@@ -246,8 +243,9 @@ function generateRandomString() {
 
 function requireLogin(req, res, next) {
   const user = req.cookies["user_id"];
+  console.log('users ', users);
   for (el in users) {
-    if (user && users[el].id) {
+    if (user === users[el].id) {
       next();
       return;
     }

@@ -2,16 +2,20 @@ const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 8080;
 const bodyParser = require("body-parser");
-const cookieParser = require('cookie-parser');
+const cookieSession = require('cookie-session');
 const bcrypt = require('bcrypt');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static('public'));
-app.use(cookieParser());
 app.set("view engine", "ejs");
 
+app.use(cookieSession({
+  name: 'session',
+  keys: ['key1', 'key2']
+}));
+
 app.use(function(req, res, next){
-  res.locals.user = users[req.cookies["user_id"]];
+  res.locals.user = users[getUserId(req)];
   next();
 });
 
@@ -45,18 +49,15 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  const arrUrls = urlDatabase[req.cookies["user_id"]];
-  const templateVars = {
-    urls: arrUrls
-  };
-  res.render("urls_index", templateVars);
+  const arrUrls = urlDatabase[getUserId(req)];
+  res.render("urls_index", { urls: arrUrls });
 });
 
 app.get("/urls/:id", (req, res) => {
   for (el in urlDatabase) {
     for (let i = 0; i < urlDatabase[el].length; i++) {
       if (urlDatabase[el][i] && req.params.id === urlDatabase[el][i].surl) {
-        let arrUrls = urlDatabase[req.cookies["user_id"]];
+        let arrUrls = urlDatabase[getUserId(req)];
         let shortURL = req.params.id;
         let userLink = arrUrls.find((entry) => entry.surl == shortURL);
 
@@ -77,8 +78,8 @@ app.get("/urls/:id", (req, res) => {
 });
 
 app.post("/urls/create", (req, res) => {
-  let arrUrls = urlDatabase[req.cookies["user_id"]];
-  let fakeUrl = generateRandomString();
+  const arrUrls = urlDatabase[getUserId(req)];
+  const fakeUrl = generateRandomString();
   arrUrls.push({"surl": fakeUrl, "lurl": req.body['longURL']});
   res.redirect("/urls/" + fakeUrl);
 });
@@ -98,17 +99,17 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 app.post("/urls/:id/delete", (req, res) => {
-  let arrUrls = urlDatabase[req.cookies["user_id"]];
+  let arrUrls = urlDatabase[getUserId(req)];
   let shortURL = req.params.id;
 
-  urlDatabase[req.cookies["user_id"]] = arrUrls.filter((entry) => entry.surl != shortURL);
+  urlDatabase[getUserId(req)] = arrUrls.filter((entry) => entry.surl != shortURL);
   res.redirect("/urls");
 });
 
 app.post("/urls/:shortURL", (req, res) => {
   let shortURL = req.params.shortURL;
   let longURL  = req.body.longURL;
-  let arrUrls = urlDatabase[req.cookies["user_id"]];
+  let arrUrls = urlDatabase[getUserId(req)];
 
   let data = arrUrls.find(function(entry) { return entry.surl == shortURL })
   data.lurl = longURL;
@@ -154,7 +155,7 @@ app.post("/login", (req, res) => {
     if(!comparePass) {
       res.redirect("/login");
     } else {
-      res.cookie("user_id", userId);
+      req.session.user_id = userId;
     }
 
     res.redirect('/');
@@ -162,7 +163,8 @@ app.post("/login", (req, res) => {
 });
 
 app.post("/logout", (req, res) => {
-  res.clearCookie("user_id");
+  // res.clearCookie("user_id");
+  req.session = null;
   res.redirect("/");
 });
 
@@ -188,7 +190,7 @@ app.post("/register", (req, res) => {
     }
     const hashed_password = bcrypt.hashSync(password, 10);
 
-    res.cookie("user_id", userId);
+    req.session.user_id = userId;
 
     let result = findUserByEmail(email);
     if(result) {
@@ -235,12 +237,8 @@ function generateRandomString() {
   return fakeShortUrl;
 }
 
-// const users = {
-//   "123abc": {id: "123abc", email: "user@email.com", password: "123456"}
-// };
-
 function requireLogin(req, res, next) {
-  const user = req.cookies["user_id"];
+  const user = getUserId(req);
   console.log('users ', users);
   console.log('user id ', user);
   for (el in users) {
@@ -252,7 +250,9 @@ function requireLogin(req, res, next) {
   res.status(401).render("error", {errMessage: "You do not have access to this page. Please <a href=\"/login\">log in</a>"});
 }
 
-
-
+function getUserId(req) {
+  // return req.cookies["user_id"];
+  return req.session.user_id;
+}
 
 

@@ -5,28 +5,29 @@
 
 <div class="wrapper">
   <h2>Your short URLs</h2>
-  <table class="all-links">
-    <tbody>
-      <% for(var data of urls) { %>
-      <tr>
+    <table class="all-links">
+      <tbody>
+        <% for(var data of urls) { %>
+        <tr>
+          <td>
+          <a href="u/<%= data.surl %>">http://localhost:8080/u/<%= data.surl %></a>
+        </td>
         <td>
-        <a href="u/<%= data.surl %>">http://localhost:8080/u/<%= data.surl %></a>
-      </td>
-      <td>
-        <%= data.lurl %>
-      </td>
-      <td>
-        <a href="/urls/<%= data.surl %>">edit</a>
-      </td>
-      <td>
-        <form method="POST" action="/urls/<%= data.surl %>/delete" class="log-form">
-          <button>delete</button>
-        </form>
-      </td>
-      </tr>
-    <% } %>
-    </tbody>
-  </table>
+          <%= data.lurl %>
+        </td>
+        <td>
+          <a href="/urls/<%= data.surl %>">edit</a>
+        </td>
+        <td>
+          <form method="POST" action="/urls/<%= data.surl %>/delete" class="log-form">
+            <button>delete</button>
+          </form>
+        </td>
+        </tr>
+      <% } %>
+      </tbody>
+    </table>
+
   <a href="/urls/new">Create a New Short Link</a>
 </div>
 
